@@ -64,7 +64,7 @@ typedef int				(*t_cmp)(void*, void*);
 ** Unsorted.
 */
 
-void					parse_arg(char *arg, t_flags *flags);
+int						parse_arg(char *arg, t_flags *flags);
 t_flags					*init_flags(void);
 void					rudimentary_ls(char *dir, t_flags *flags);
 void					full_ls(char *dir, t_flags *flags);

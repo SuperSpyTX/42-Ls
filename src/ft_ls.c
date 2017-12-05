@@ -6,7 +6,7 @@
 /*   By: jkrause <jkrause@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/29 15:36:50 by jkrause           #+#    #+#             */
-/*   Updated: 2017/12/04 15:15:20 by jkrause          ###   ########.fr       */
+/*   Updated: 2017/12/04 19:44:30 by jkrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,10 @@ int				main(int argc, char **argv)
 	while (++i < argc)
 	{
 		if (argv[i][0] == '-')
-			parse_arg(argv[i], flags);
+		{
+			if (!parse_arg(argv[i], flags))
+				return (1);
+		}
 		else
 			read_arg(argv[i], flags);
 	}
