@@ -19,7 +19,14 @@ int				cmp_alpha(t_entry *a, t_entry *b)
 
 int				cmp_time(t_entry *a, t_entry *b)
 {
-	return (b->mtim - a->mtim);
+	int			val;
+
+	val = (b->mtim - a->mtim);
+	if (val == 0)
+		val = (b->timpls.tv_nsec - a->timpls.tv_nsec);
+	if (val == 0)
+		return (cmp_alpha(a, b));
+	return (val);
 }
 
 int				cmp_alpha_r(t_entry *a, t_entry *b)

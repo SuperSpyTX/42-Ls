@@ -6,7 +6,7 @@
 /*   By: jkrause <jkrause@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/29 16:16:56 by jkrause           #+#    #+#             */
-/*   Updated: 2017/12/04 00:05:56 by jkrause          ###   ########.fr       */
+/*   Updated: 2017/12/04 19:20:03 by jkrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct			s_entry
 	char				*date;
 	char				*name;
 	char				*filelink;
-	int					bsize;
+	char				*bsize;
 	int					blocks;
 	struct timespec		timpls;
 	time_t				mtim;
@@ -52,9 +52,9 @@ typedef	struct			s_flags
 	int					reverse;
 }						t_flags;
 
-typedef union			s_freebird_entry
+typedef union			u_freebird_entry
 {
-	char				*addresses[7];
+	char				*addresses[8];
 	t_entry				entry;
 }						t_freebird_entry;
 
@@ -87,20 +87,22 @@ void					print_entries(t_entry **entries, t_flags *flags);
 int						read_ls_arg(char *entry, t_flags *flags);
 int						filetypeletter(int mode);
 void					add_filestack(t_entry *arg);
-void					add_ls_stack(char *arg, char ***ls_stack,
+void					add_ls_stack(t_entry *arg, t_entry ***ls_stack,
 							int *ls_stacksize);
 t_entry					*get_entry(char *file, t_flags *flags);
 t_entry					**get_filestack(void);
 int						get_filestack_count(void);
+int						getwidth(int t);
 t_entry					**get_entries(char *dir, t_flags *flags);
-void					sort_ls_stack_alpha(char **ls_stack, int ls_stacksize);
-void					finish_ls_stack(char ***ls_stack, int *ls_stacksize);
-void					process_clusterfuck(char **ls_stack, int ls_stack_size,
-							t_flags *flags, int argc);
-void					process_ls_stack_entries(t_entry **entries, t_flags *flags);
+void					sort_ls_stack_alpha(t_entry **ls_stack,
+							int ls_stacksize);
+void					finish_ls_stack(t_entry ***ls_stack, int *ls_stacksize);
+void					process_clusterfuck(t_entry **ls_stack,
+							int ls_stack_size, t_flags *flags, int argc);
+void					process_ls_stack_entries(t_entry **entries,
+							t_flags *flags);
 void					freebird_entry(t_entry *entry);
 void					freebird_entries(t_entry **entries);
-void					freebird_chararray(char **arg);
 void					free_filestack(void);
 char					*path_join(char *a, char *b);
 int						count_entries(t_entry **entries);

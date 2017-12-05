@@ -6,7 +6,7 @@
 /*   By: jkrause <jkrause@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/29 19:22:21 by jkrause           #+#    #+#             */
-/*   Updated: 2017/12/04 01:41:39 by jkrause          ###   ########.fr       */
+/*   Updated: 2017/12/04 16:02:08 by jkrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,10 @@ void					suffix(char *path, t_entry *entry)
 	acl = acl_get_link_np(path, ACL_TYPE_EXTENDED);
 	if (acl && acl_get_entry(acl, ACL_FIRST_ENTRY, &dummy) == -1)
 	{
+		acl_free(acl);
 		acl = 0;
 	}
-	if (listxattr(path, 0, 0, 0) > 0)
+	if (listxattr(path, 0, 0, XATTR_NOFOLLOW) > 0)
 		entry->perms[10] = '@';
 	else if (acl != 0)
 		entry->perms[10] = '+';
@@ -98,27 +99,29 @@ void					suffix(char *path, t_entry *entry)
 
 void					read_detailed(t_entry *entry, t_flags *flags)
 {
-	struct stat			file;
+	struct stat			f;
 	char				*join;
 
 	join = path_join(entry->directory, entry->name);
-	if ((flags->detailed == 1 ? lstat(join, &file) : stat(join, &file)) != 0)
+	if ((flags->detailed == 1 ? lstat(join, &f) : stat(join, &f)) != 0)
 	{
 		write_error(entry->name);
 		entry->skip = 1;
-		free(join);
-		return ;
+		return (void)free(join);
 	}
-	entry->skip = 0;
-	entry->perms = perms(file.st_mode);
+	entry->perms = perms(f.st_mode);
 	suffix(join, entry);
 	free(join);
-	entry->links = file.st_nlink;
-	entry->username = ft_strdup(getpwuid(file.st_uid)->pw_name);
-	entry->groupname = ft_strdup(getgrgid(file.st_gid)->gr_name);
-	entry->bsize = file.st_size;
-	entry->blocks = file.st_blocks;
-	entry->mtim = file.st_mtime;
-	entry->timpls = file.st_mtimespec;
-	get_full_date_str(entry, file.st_mtime, file.st_mtimespec);
+	if (entry->perms[0] == 'c' || entry->perms[0] == 'b')
+		entry->bsize = ft_sprintf("%*d, %*d", getwidth(major(f.st_rdev)) + 1,
+				major(f.st_rdev), 3, minor(f.st_rdev));
+	else
+		entry->bsize = ft_sprintf("%d", f.st_size);
+	entry->links = f.st_nlink;
+	entry->username = ft_strdup(getpwuid(f.st_uid)->pw_name);
+	entry->groupname = ft_strdup(getgrgid(f.st_gid)->gr_name);
+	entry->blocks = f.st_blocks;
+	entry->mtim = f.st_mtime;
+	entry->timpls = f.st_mtimespec;
+	get_full_date_str(entry, f.st_mtime, f.st_mtimespec);
 }

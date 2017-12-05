@@ -15,8 +15,7 @@
 CFLAGS = -g  -Wall -Werror -Wextra
 FT_LS_NAME = ft_ls
 CFLAGS += -I includes
-FT_LS_SRC = src/path.c \
-src/parse_flags.c \
+FT_LS_SRC = src/parse_flags.c \
 src/ft_ls.c \
 src/read_ls.c \
 src/print.c \

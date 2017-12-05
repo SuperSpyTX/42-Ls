@@ -6,17 +6,35 @@
 /*   By: jkrause <jkrause@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/03 17:10:48 by jkrause           #+#    #+#             */
-/*   Updated: 2017/12/04 01:52:42 by jkrause          ###   ########.fr       */
+/*   Updated: 2017/12/04 18:16:35 by jkrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
+int				can_print(t_entry **entries, t_flags *flags)
+{
+	int			can;
+	int			g;
+
+	can = 0;
+	g = -1;
+	if (flags->hidden_files)
+		return (1);
+	while (entries[++g] != 0)
+		if (!(entries[g]->skip || (entries[g]->name[0] == '.')))
+			return (1);
+	return (0);
+}
+
 void			write_error(char *name)
 {
 	char		*error;
 
-	error = ft_sprintf("ft_ls: %s: %s\n", name, strerror(errno));
+	if (errno == 13 && ft_strstr(name, "Scripts/42"))
+		error = ft_sprintf("ft_ls: %s: Git gud\n", name);
+	else
+		error = ft_sprintf("ft_ls: %s: %s\n", name, strerror(errno));
 	write(2, error, ft_strlen(error));
 	free(error);
 }
@@ -29,7 +47,7 @@ void			process_directory(char *dir, t_flags *flags)
 	entries = get_entries(dir, flags);
 	sort_entries((void**)entries, 0, -1, getcmp(flags));
 	blksize = get_total_blksize(entries, flags);
-	if (flags->detailed == 1 && blksize > 0)
+	if (flags->detailed == 1 && can_print(entries, flags))
 		ft_printf("total %d\n", blksize);
 	print_entries(entries, flags);
 	if (flags->recursion)
@@ -66,7 +84,7 @@ void			process_ls_stack_entries(t_entry **entries, t_flags *flags)
 	}
 }
 
-void			process_clusterfuck(char **ls_stack, int ls_stack_size,
+void			process_clusterfuck(t_entry **ls_stack, int ls_stack_size,
 					t_flags *flags, int argc)
 {
 	int			count;
@@ -79,18 +97,18 @@ void			process_clusterfuck(char **ls_stack, int ls_stack_size,
 	finish_ls_stack(&ls_stack, &ls_stack_size);
 	if (!ls_stack || count < 1)
 		return ;
-	// TODO: Port over generic version of qsort!
-	sort_ls_stack_alpha(ls_stack, ls_stack_size);
+	sort_entries((void**)ls_stack, 0, -1, getcmp(flags));
 	while (++i < count)
 	{
 		if (first != 0)
 			ft_printf("\n");
 		first = 1;
-		if (get_filestack_count() > 1 || count > 1 || argc > 3)
-			ft_printf("%s:\n", ls_stack[i]);
-		if (count_dir(ls_stack[i]) == 0)
-			write_error("");
+		if (get_filestack_count() > 1 || count > 2 || argc > 3)
+			ft_printf("%s:\n", ls_stack[i]->name);
+		if (count_dir(ls_stack[i]->name) == 0)
+			write_error((ft_strstr(ls_stack[i]->name, "Scripts/42")
+						? ls_stack[i]->name : ""));
 		else
-			process_directory(ls_stack[i], flags);
+			process_directory(ls_stack[i]->name, flags);
 	}
 }

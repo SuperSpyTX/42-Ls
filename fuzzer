@@ -1,0 +1,72 @@
+#!/bin/bash
+IDIR="$HOME/Documents/42/ft_ls/fuckery/";
+DIR="$IDIR/";
+LEN=50;
+PREFIX="vdhcosaz879hfo9d8y7_";
+
+if [ -z "$1" ]; then
+	echo "Usage: $0 [size]";
+	exit 255
+fi
+
+rm -rf $IDIR;
+mkdir $IDIR;
+cd $IDIR;
+
+echo "Creating...";
+for i in $(seq $1); do
+	RAND="$(cat /dev/random | LC_ALL=C tr -dc '[:alnum:]' | fold -w $LEN | head -n 1)";
+	CD=0
+	while true; do
+		touch $PREFIX$(cat /dev/random | LC_ALL=C tr -dc '[:graph:]' | fold -w $LEN | head -n 1) 2>/dev/null && break;
+		while true; do
+			RAND2="$(cat /dev/random | LC_ALL=C tr -dc '[:print:]' | fold -w $LEN | head -n 1)";
+			mkdir "$RAND2" 2>/dev/null && break;
+		done
+		cd "$RAND2";
+		CD=1;
+	done
+	if [ "$CD" -eq 1 ]; then
+		cd "$IDIR";
+	fi
+	#RAND=$(echo -n "$PREFIX$RAND");
+	#FL=$(echo "$RAND" | head -c 1);
+	#if [ "$FL" == "g" ]; then
+	#	mkdir $DIR/$RAND;
+	#	cd $DIR/$RAND;
+	#	DIR=$(pwd);
+	#	continue;
+	#elif [ "$FL" == "z" ]; then
+	#	cd $IDIR;
+	#	DIR=$(pwd);
+	#fi
+	#touch "$RAND";
+done
+
+cd "$IDIR";
+cd ../;
+echo "Testing...";
+
+# Test initial directory with -lR (at least)
+echo "LS CMD: ./ts -lR $IDIR";
+$HOME/Documents/42/ft_ls/ts -lR "$IDIR";
+EC=$?;
+if [ "$EC" -ne 0 ]; then
+	echo "./ts -lR $IDIR" > failed.txt
+	exit 255;
+fi
+
+for i in $(./ft_ls -R $IDIR | grep -E "^\/.+:\$" | sed -e 's/.$//g'); do
+	LSCMD=$(cat /dev/random | LC_ALL=C tr -dc 'latrR' | fold -w 4 | head -n 1 | grep -o . | sort | uniq | perl -MList::Util -e 'print List::Util::shuffle <>' | tr -d '\n');
+	echo "LS CMD: ./ts -$LSCMD $i";
+	$HOME/Documents/42/ft_ls/ts -$LSCMD "$i";
+	EC=$?;
+	if [ "$EC" -ne 0 ]; then
+		echo "./ts -$LSCMD $i" > failed.txt
+		exit 255;
+	fi
+done
+#echo "Finished! - Here *was* the directory";
+#./ft_ls -lR "$IDIR";
+echo "Yay";
+rm -rf "$IDIR";

@@ -6,13 +6,13 @@
 /*   By: jkrause <jkrause@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/29 23:29:50 by jkrause           #+#    #+#             */
-/*   Updated: 2017/12/03 22:12:12 by jkrause          ###   ########.fr       */
+/*   Updated: 2017/12/04 12:54:44 by jkrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-size_t					get_numwidth(int t)
+int						getwidth(int t)
 {
 	int					width;
 
@@ -39,14 +39,14 @@ size_t					*get_maxwidths(t_entry **entries, t_flags *flags)
 			continue;
 		longest[0] = (longest[0] < ft_strlen(entries[g]->perms)
 				? ft_strlen(entries[g]->perms) : longest[0]);
-		longest[1] = (longest[1] < get_numwidth(entries[g]->links)
-				? get_numwidth(entries[g]->links) : longest[1]);
+		longest[1] = (longest[1] < (size_t)getwidth(entries[g]->links)
+				? (size_t)getwidth(entries[g]->links) : longest[1]);
 		longest[2] = (longest[2] < ft_strlen(entries[g]->username)
 				? ft_strlen(entries[g]->username) : longest[2]);
 		longest[3] = (longest[3] < ft_strlen(entries[g]->groupname)
 				? ft_strlen(entries[g]->groupname) : longest[3]);
-		longest[4] = (longest[4] < get_numwidth(entries[g]->bsize)
-				? get_numwidth(entries[g]->bsize) : longest[4]);
+		longest[4] = (longest[4] < ft_strlen(entries[g]->bsize)
+				? ft_strlen(entries[g]->bsize) : longest[4]);
 		longest[5] = (longest[5] < ft_strlen(entries[g]->date)
 				? ft_strlen(entries[g]->date) : longest[5]);
 	}
@@ -71,11 +71,11 @@ void					print_entry(t_entry *entry, t_flags *flags,
 {
 	if (flags->detailed && widths)
 	{
-		ft_printf("%-*s %*d %-*s %-*s %*d %-*s %-s", widths[0],
+		ft_printf("%-*s %*d %-*s %-*s %*s %-*s %-s", widths[0],
 				entry->perms, widths[1],
 				entry->links, widths[2] + 1, entry->username,
-				widths[3] + 1, entry->groupname, widths[4],
-				entry->bsize, 12, entry->date,
+				widths[3], entry->groupname,
+				widths[4] + 1, entry->bsize, 12, entry->date,
 				entry->name);
 		if (entry->perms[0] == 'l')
 			ft_printf(" -> %s", entry->filelink);

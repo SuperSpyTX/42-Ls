@@ -24,7 +24,7 @@ void						freebird_entry(t_entry *entry)
 
 	fbentry.entry = *entry;
 	i = -1;
-	while (++i < 7)
+	while (++i < 8)
 		if (fbentry.addresses[i] != 0)
 			free(fbentry.addresses[i]);
 	free(entry);

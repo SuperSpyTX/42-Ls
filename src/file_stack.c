@@ -40,7 +40,6 @@ void				free_filestack(void)
 {
 	freebird_entries(g_file_stack);
 	g_file_stack = 0;
-	g_file_stacksize = 0;
 }
 
 int					get_filestack_count(void)

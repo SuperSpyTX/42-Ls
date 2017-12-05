@@ -6,12 +6,11 @@
 /*   By: jkrause <jkrause@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/18 17:16:16 by jkrause           #+#    #+#             */
-/*   Updated: 2017/08/22 15:34:22 by jkrause          ###   ########.fr       */
+/*   Updated: 2017/12/04 19:21:39 by jkrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-
 
 void					module_init(void)
 {

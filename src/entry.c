@@ -21,9 +21,7 @@ int					count_dir(char *dir)
 	count = 0;
 	s = opendir(dir);
 	if (s == 0)
-	{
 		return (0);
-	}
 	while ((entry = readdir(s)))
 		count++;
 	closedir(s);
