@@ -12,7 +12,7 @@
 # ----------------- Version 1.5 --------------------- #
 
 # ------------- Automated Configuration ------------- #
-CFLAGS = -g  -Wall -Werror -Wextra
+CFLAGS =   -Wall -Werror -Wextra
 FT_LS_NAME = ft_ls
 CFLAGS += -I includes
 FT_LS_SRC = src/parse_flags.c \
