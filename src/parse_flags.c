@@ -6,7 +6,7 @@
 /*   By: jkrause <jkrause@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/29 18:20:34 by jkrause           #+#    #+#             */
-/*   Updated: 2017/12/04 19:47:36 by jkrause          ###   ########.fr       */
+/*   Updated: 2017/12/04 19:58:53 by jkrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ int						parse(char ltr, t_flags *flags)
 		flags->time_sort = 1;
 	else if (ltr == 'r')
 		flags->reverse = 1;
+	else if (ltr == '1')
+		return (1);
 	else
 	{
 		error = ft_sprintf("illegal option -- %c", ltr);

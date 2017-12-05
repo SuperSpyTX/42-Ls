@@ -15,7 +15,7 @@ divert(-1)
 # ------------- Real Configuration ------------------ #
 define(MK_NUM_OF_TARGETS, 1)
 define(MK_FCLEAN_ON_RE, 0)
-define(MK_DEBUG, 1)
+define(MK_DEBUG, 0)
 
 define(MK_FT_LS_NAME, ft_ls)
 define(MK_FT_LS_ISLIB, 0)
